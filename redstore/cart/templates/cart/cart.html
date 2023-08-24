@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Products | RedStore</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<style>
+    .proceed-btn{
+    background-color: #ff523b;
+    padding: 10px 20px;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 48rem;
+    margin-top: 2rem;
+}
+
+.proceed-btn:hover {
+    background-color: #ff704d;
+}
+</style>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="logo">
+                <a href="{% url 'mainapp:index' %}"><img src="{% static 'images/logo.png' %}" alt="logo" width="125px"></a>
+            </div>
+            <nav>
+                <ul id="MenuItems">
+                    <li><a href="{% url 'mainapp:index' %}">Home</a></li>
+                    <li><a href="{% url 'mainapp:products' %}">Products</a></li>
+                    <li><a href="">About</a></li>
+                    <li><a href="">Contact</a></li>
+                    <li><a href="{% url 'mainapp:account' %}">Account</a></li>
+                </ul>
+            </nav>
+            <a href="{% url 'cart:view_cart' %}"><img src="{% static 'images/cart.png' %}" width="30px" height="30px"></a>
+            <img src="{% static 'images/menu.png' %}" class="menu-icon" onclick="menutoggle()">
+        </div>
+    </div>
+
+    <!-- Cart items details -->
+    <div class="small-container cart-page">
+        <table>
+            
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                </tr>
+                
+                {% for cart_item in cart_items %}
+                <tr data-cart-item-id="{{ cart_item.id }}" data-item-price="{{ cart_item.item.price }}">
+                    <td>
+                        <div class="cart-info">
+                            <img src="{{ cart_item.item.image.url }}" alt={{ cart_item.item.product_details }}>
+                            <div>
+                                <p>{{ cart_item.item.name }}</p>
+                                <small>{{ cart_item.item.price }}</small>
+                                <br>
+                                <a href="{% url 'cart:remove_from_cart' cart_item.id %}">Remove</a>
+                            </div>
+                        </div>
+                    </td>
+                
+                    <td>
+                        <input type="number" value="{{ cart_item.quantity }}" min="1" data-cart-item-id="{{ cart_item.id }}" class="quantity-input">
+                        <div class="result" data-cart-item-id="{{ cart_item.id }}"></div>
+                    </td>
+                    
+                    <td>${{ cart_item.total_price }}</td>
+                    
+                </tr>
+               {% endfor %}
+        
+            {% comment %} <tr>
+                <td>
+                    <div class="cart-info">
+                        <img src="{% static 'images/buy-2.jpg' %}">
+                        <div>
+                            <p>Red Printed T-Shirt</p>
+                            <small>Price: $50.00</small>
+                            <br>
+                            <a href="">Remove</a>
+                        </div>
+                    </div>
+                </td>
+                <td><input type="number" value="1"></td>
+                <td>$50.00</td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="cart-info">
+                        <img src="{% static 'images/buy-3.jpg' %}">
+                        <div>
+                            <p>Red Printed T-Shirt</p>
+                            <small>Price: $50.00</small>
+                            <br>
+                            <a href="">Remove</a>
+                        </div>
+                    </div>
+                </td>
+                <td><input type="number" value="1"></td>
+                <td>$50.00</td>
+            </tr> {% endcomment %}
+        </table>
+        <div class="total-price">
+            <table>
+                <tr>
+                    <td>Subtotal</td>
+                    <td id="cart-total">
+                        ${{ cart_total }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Tax</td>
+                    <td id="cart-tax">
+                        ${{ cart_tax }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td id="cart-total-with-tax">
+                        ${{ cart_total_with_tax }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+      
+        <tr> 
+            <td></td>
+            <td><button id="proceed-to-pay" class="proceed-btn">Proceed to Pay</button></td>
+            <td></td>
+        </tr>
+        
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="footer-col-1">
+                    <h3>Download Our App</h3>
+                    <p>Download App for Android and ios mobile phone.</p>
+                    <div class="app-logo">
+                        <img src="{% static 'images/play-store.png' %}">
+                        <img src="{% static 'images/app-store.png' %}">
+                    </div>
+                </div>
+                <div class="footer-col-2">
+                    <img src="{% static 'images/logo-white.png' %}">
+                    <p>Our Purpose Is To Sustainably Make the Pleasure and Benefits of Sports Accessible to the Many.
+                    </p>
+                </div>
+                <div class="footer-col-3">
+                    <h3>Useful Links</h3>
+                    <ul>
+                        <li>Coupons</li>
+                        <li>Blog Post</li>
+                        <li>Return Policy</li>
+                        <li>Join Affiliate</li>
+                    </ul>
+                </div>
+                <div class="footer-col-4">
+                    <h3>Follow Us</h3>
+                    <ul>
+                        <li>Facebook</li>
+                        <li>Twitter</li>
+                        <li>Instagram</li>
+                        <li>Youtube</li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <p class="copyright">Copyright 2020 - Samwit Adhikary</p>
+        </div>
+    </div>
+
+    <!-- javascript -->
+   
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.quantity-input').on('input', function() {
+                var cartItemRow = $(this).closest('tr');
+                var cartItemId = cartItemRow.data('cart-item-id');
+                var newItemQuantity = $(this).val();
+                var itemPrice = cartItemRow.data('item-price');
+                updateCartItem(cartItemId, newItemQuantity, itemPrice);
+            });
+
+            function updateCartItem(cartItemId, newQuantity, itemPrice) {
+                var itemSubtotal = newQuantity * itemPrice;
+                var cartItemRow = $('[data-cart-item-id="' + cartItemId + '"]');
+                cartItemRow.find('td:last-child').text(itemSubtotal.toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
+            
+                $.post("/update_cart/" + cartItemId + "/", { new_quantity: newQuantity })
+                    .done(function(response) {
+                        updateSubtotalAndTotal(response.cart_subtotal, response.cart_total, response.cart_tax, response.cart_total_with_tax);
+                    });
+            }
+            
+            function updateSubtotalAndTotal(subtotal, total, tax, totalWithTax) {
+                $('#cart-subtotal').text(subtotal.toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
+                $('#cart-total').text(total.toFixed(2));  // Remove toLocaleString() for cart total
+                $('#cart-tax').text(tax.toFixed(2));      // Remove toLocaleString() for cart tax
+                $('#cart-total-with-tax').text(totalWithTax.toFixed(2));  // Remove toLocaleString() for cart total with tax
+            }
+            
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // ... (your existing JavaScript code) ...
+    
+            // Handling the "Proceed to Pay" button click
+            $('#proceed-to-pay').on('click', function() {
+                // Here, you can simulate the behavior of proceeding to the payment process.
+                // For demonstration purposes, let's show an alert message.
+                alert('Proceeding to payment process...');
+            });
+        });
+    </script>
+</body>
+
+</html>
